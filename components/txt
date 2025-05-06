@@ -1,0 +1,96 @@
+const products: Product[] = [
+  {
+    id: 1,
+    name: "Bayam Hijau",
+    price: "Rp20.000/kg",
+    description:
+      "Bayam mengandung antioksidan, seperti vitamin C dan Vitamin E yang membantu melawan radikal bebas dalam tubuh dan dapat melindungi sel-sel dari kerusakan. Kandungan folat dalam bayam penting untuk kesehatan otak dan dapat membantu meningkatkan kognisi sehingga menjadikannya pilihan yang sangat baik untuk mendukung kesehatan mental dan fisik.",
+    source: "https://telemed.ihc.id/artikel-detail-1081-Manfaat-Sayur-Bayam-Untuk-Kesehatan.html",
+    image: "/bayam_hijau.jpg",
+  },
+  {
+    id: 2,
+    name: "Kangkung",
+    price: "Rp20.000/kg",
+    description:
+      "Kangkung memiliki ragam senyawa tanaman dengan aktivitas antioksidan, seperti flavonoid, asam palmitate dan phytol. Antioksidan tersebut guna melawan radikal bebas yang kerap menyebabkan kerusakan DNA, sel jaringan hingga organ tubuh.",
+    source: "https://telemed.ihc.id/artikel-detail-609-Manfaat-Kangkung-Untuk-Kesehatan.html",
+    image: "/kangkung.jpg",
+  },
+  {
+    id: 3,
+    name: "Caisim",
+    price: "Rp22.000/kg",
+    description:
+      "Caisim adalah sayuran yang kaya vitamin juga mineral, yang dibutuhkan tubuh. Caisim mengandung vitamin K dan C yang berkontribusi secara baik untuk menjaga sistem pertahanan kekebalan tubuh.",
+    source:
+      "https://www.liputan6.com/hot/read/5126130/14-manfaat-sawi-hijau-untuk-kesehatan-kaya-antioksidan-dan-sumber-vitamin?page=4",
+    image: "/caisim.jpg",
+  },
+  {
+    id: 4,
+    name: "Pakcoy",
+    price: "Rp22.000/kg",
+    description:
+      "Sayuran ini penuh dengan senyawa untuk melawan kanker seperti vitamin C, vitamin E, beta-karoten, folat, dan selenium. Vitamin C, vitamin E, dan beta-karoten adalah antioksidan kuat yang dapat membantu mencegah kerusakan sel akibat radikal bebas.",
+    source: "https://www.kompas.com/sains/read/2023/08/02/203000823/6-manfaat-pakcoy-untuk-kesehatan",
+    image: "/pakcoy.jpg",
+  },
+  {
+    id: 5,
+    name: "Kale",
+    price: "Rp35.000/kg",
+    description:
+      'Kale adalah sayuran hijau bergizi tinggi yang sering disebut "superfood" karena kandungan nutrisi yang melimpah dan manfaatnya bagi kesehatan. Kale dikenal baik untuk kesehatan jantung, mata, tulang, sistem pencernaan, serta memiliki efek anti-penuaan dan detoksifikasi kulit.',
+    source: "https://www.halodoc.com/artikel/mengenal-sayur-kale-dan-manfaatnya-untuk-kesehatan",
+    image: "/kale.jpg",
+  },
+  {
+    id: 6,
+    name: "Selada Keriting",
+    price: "Rp25.000/kg",
+    description:
+      "Selada keriting adalah salah satu sayuran daun yang rendah kalori dan banyak mengandung serat. Kombinasi rendah kalori dan tinggi serat membuat selada cocok dikonsumsi sebagai makanan penurun berat badan.",
+    source:
+      "https://www.kompas.com/tren/read/2023/11/22/063000665/jadi-lalapan-penurun-berat-badan-ini-4-efek-samping-daun-selada?page=all",
+    image: "/selada_keriting.jpg",
+  },
+  {
+    id: 7,
+    name: "Selada Romaine",
+    price: "Rp25.000/kg",
+    description:
+      "Selada romaine adalah salah satu jenis sayuran hijau yang sering digunakan dalam salad dan hidangan sehat lainnya. Selada romaine juga kaya akan nutrisi penting seperti serat, vitamin A, vitamin K, folat, dan mineral seperti kalium.",
+    source: "https://www.halodoc.com/artikel/selada-romaine-ini-kandungan-nutrisi-dan-manfaatnya-untuk-kesehatan",
+    image: "/selada_romaine.jpg",
+  },
+  {
+    id: 8,
+    name: "Melon Fujisawa",
+    price: "Rp33.000/kg",
+    description:
+      "Melon Fujisawa merupakan jenis melon varietas Jepang yang memiliki tekstur daging empuk, renyah, dan manis, dengan warna orange, sedangkan kulitnya tebal dan berjaring rapat berwarna hijau.",
+    source:
+      "https://surabaya.tribunnews.com/2022/09/14/sukses-budidaya-melon-sehat-dari-jepang-desa-di-lamongan-raup-pendapatan-besar-tanpa-pupuk-kimia",
+    image: "/melon_fujisawa.jpg",
+  },
+  {
+    id: 9,
+    name: "Bayam Merah",
+    price: "Rp20.000/kg",
+    description:
+      "Bayam mengandung antioksidan, seperti vitamin C dan Vitamin E yang membantu melawan radikal bebas dalam tubuh dan dapat melindungi sel-sel dari kerusakan. Kandungan folat dalam bayam penting untuk kesehatan otak dan dapat membantu meningkatkan kognisi sehingga menjadikannya pilihan yang sangat baik untuk mendukung kesehatan mental dan fisik.",
+    source: "https://telemed.ihc.id/artikel-detail-1081-Manfaat-Sayur-Bayam-Untuk-Kesehatan.html",
+    image: "/bayam_merah.jpg",
+  },
+  {
+    id: 10,
+    name: "Melon Sweetnet",
+    price: "Rp33.000/kg",
+    description:
+      "Melon Fujisawa merupakan jenis melon varietas Jepang yang memiliki tekstur daging empuk, renyah, dan manis, dengan warna orange, sedangkan kulitnya tebal dan berjaring rapat berwarna hijau.",
+    source:
+      "https://surabaya.tribunnews.com/2022/09/14/sukses-budidaya-melon-sehat-dari-jepang-desa-di-lamongan-raup-pendapatan-besar-tanpa-pupuk-kimia",
+    image: "/melon_sweetnet.jpg",
+  },
+]
