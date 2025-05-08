@@ -11,12 +11,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { formatDate } from "@/lib/utils"
-import { LogOut, RefreshCw, Search, Eye } from "lucide-react"
+import { LogOut, RefreshCw, Search, Eye, Calendar } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
 import type { Order, OrderItem } from "@/types/order"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Calendar as CalendarComponent } from "@/components/ui/calendar"
+import { id } from "date-fns/locale"
 
 interface AdminOrdersDashboardProps {
   initialOrders: Order[]
@@ -31,6 +34,8 @@ export default function AdminOrdersDashboard({ initialOrders }: AdminOrdersDashb
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
   const [orderItems, setOrderItems] = useState<OrderItem[]>([])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [editingDate, setEditingDate] = useState<Date | null>(null)
+  const [isUpdatingDate, setIsUpdatingDate] = useState(false)
   const router = useRouter()
   const supabase = createClient()
 
@@ -212,6 +217,55 @@ export default function AdminOrdersDashboard({ initialOrders }: AdminOrdersDashb
 
   const statusCounts = getStatusCounts()
 
+  const handleDateChange = async (id: string, newDate: Date) => {
+    try {
+      setIsUpdatingDate(true)
+  
+      // Dapatkan order yang sedang dipilih
+      const originalOrder = orders.find(order => order.id === id)
+      if (!originalOrder) return
+  
+      // Pertahankan waktu yang sama dari created_at asli
+      const originalDate = new Date(originalOrder.created_at)
+      const updatedDate = new Date(newDate)
+      
+      // Set jam, menit, detik yang sama dengan created_at asli
+      updatedDate.setHours(
+        originalDate.getHours(),
+        originalDate.getMinutes(),
+        originalDate.getSeconds(),
+        originalDate.getMilliseconds()
+      )
+  
+      const { error } = await supabase
+        .from("orders")
+        .update({ created_at: updatedDate.toISOString() })
+        .eq("id", id)
+  
+      if (error) {
+        console.error("Error updating date:", error)
+        return
+      }
+  
+      const updatedOrders = orders.map((order) =>
+        order.id === id ? { ...order, created_at: updatedDate.toISOString() } : order
+      )
+  
+      setOrders(updatedOrders)
+      applyFilters(updatedOrders, searchTerm, statusFilter)
+  
+      if (selectedOrder && selectedOrder.id === id) {
+        setSelectedOrder({ ...selectedOrder, created_at: updatedDate.toISOString() })
+      }
+  
+      setEditingDate(null)
+    } catch (error) {
+      console.error("Failed to update date:", error)
+    } finally {
+      setIsUpdatingDate(false)
+    }
+  }
+
   return (
     <div className="container mx-auto py-10 px-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
@@ -303,7 +357,27 @@ export default function AdminOrdersDashboard({ initialOrders }: AdminOrdersDashb
                   {filteredOrders.map((order) => (
                     <TableRow key={order.id}>
                       <TableCell className="font-medium">{order.order_number}</TableCell>
-                      <TableCell className="whitespace-nowrap">{formatDate(order.created_at)}</TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        <div className="flex items-center gap-1">
+                          {formatDate(order.created_at)}
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-6 w-6">
+                                <Calendar className="h-3.5 w-3.5" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <CalendarComponent
+                                mode="single"
+                                selected={new Date(order.created_at)}
+                                onSelect={(date) => date && handleDateChange(order.id, date)}
+                                disabled={(date) => date > new Date() || date < new Date("2020-01-01")}
+                                locale={id}
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                      </TableCell>
                       <TableCell>{order.customer_name}</TableCell>
                       <TableCell>{order.customer_phone}</TableCell>
                       <TableCell>Rp{(order.total_price + order.delivery_fee).toLocaleString()}</TableCell>
@@ -348,8 +422,30 @@ export default function AdminOrdersDashboard({ initialOrders }: AdminOrdersDashb
           {selectedOrder && (
             <>
               <DialogHeader>
-                <DialogTitle>Detail Pesanan #{selectedOrder.order_number}</DialogTitle>
-                <DialogDescription>Dibuat pada {formatDate(selectedOrder.created_at)}</DialogDescription>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <DialogTitle>Detail Pesanan #{selectedOrder.order_number}</DialogTitle>
+                    <div className="flex items-center gap-2">
+                      <DialogDescription>Dibuat pada {formatDate(selectedOrder.created_at)}</DialogDescription>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-6 w-6">
+                            <Calendar className="h-3.5 w-3.5" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <CalendarComponent
+                            mode="single"
+                            selected={new Date(selectedOrder.created_at)}
+                            onSelect={(date) => date && handleDateChange(selectedOrder.id, date)}
+                            disabled={(date) => date > new Date() || date < new Date("2020-01-01")}
+                            locale={id}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                  </div>
+                </div>
               </DialogHeader>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
@@ -375,8 +471,13 @@ export default function AdminOrdersDashboard({ initialOrders }: AdminOrdersDashb
                         ? "Ambil Sendiri"
                         : selectedOrder.delivery_method === "own_delivery"
                           ? "Diantar oleh Armada Kami"
-                          : "Lalamove"}
+                          : selectedOrder.delivery_method === "courier"
+                            ? `Kurir ${selectedOrder.courier?.toUpperCase()} - ${selectedOrder.courier_service}`
+                            : selectedOrder.delivery_method}
                     </p>
+                    {selectedOrder.delivery_method === "courier" && selectedOrder.shipping_etd && (
+                      <p className="text-sm text-gray-500">Estimasi pengiriman: {selectedOrder.shipping_etd} hari</p>
+                    )}
                   </div>
 
                   <div>
