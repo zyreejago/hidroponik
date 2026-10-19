@@ -5,6 +5,12 @@ import type { Database } from "@/types/supabase"
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
+
+  // Mode tanpa Supabase (portfolio): lewati auth check agar tidak throw
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return res
+  }
+
   const supabase = createMiddlewareClient<Database>({ req, res })
 
   // ⬇️ Inilah yang penting: ini sinkronkan cookie auth
